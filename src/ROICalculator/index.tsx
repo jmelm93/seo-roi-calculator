@@ -85,6 +85,9 @@ const ROICalculator: React.FC = () => {
       <Typography variant="h3" marginBottom={2.5}>
         ROI Calculator
       </Typography>
+      <Typography variant="body2" marginBottom={2}>
+        Created by Jason Melman
+      </Typography>
       <ROIForm
         inputs={inputs}
         setInputs={setInputs}
