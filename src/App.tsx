@@ -10,7 +10,9 @@ import {
   Typography,
   Container,
   Paper,
+  Stack,
 } from "@mui/material";
+import CreatedByMessage from "./components/CreatedByMessage";
 import HomeIcon from "@mui/icons-material/Home";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -25,8 +27,10 @@ function App() {
               SEO Calculator Suite
             </Typography>
             <Button color="inherit" component={Link} to="/">
-              <HomeIcon />
-              Home
+              <Stack direction="row" spacing={1} alignItems="center">
+                <HomeIcon />
+                <Typography>Home</Typography>
+              </Stack>
             </Button>
           </Toolbar>
         </AppBar>
@@ -49,6 +53,7 @@ function HomePage() {
       <Typography variant="h4" sx={{ mb: 2 }}>
         Welcome to the SEO Calculator Suite
       </Typography>
+      <CreatedByMessage />
       <Paper
         sx={{
           p: 2,

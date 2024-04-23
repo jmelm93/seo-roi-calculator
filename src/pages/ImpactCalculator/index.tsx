@@ -11,6 +11,7 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
+import CreatedByMessage from "../../components/CreatedByMessage";
 import InfoIcon from "@mui/icons-material/Info";
 import seoBsForecastCalculator, {
   RevenueImpactResult,
@@ -64,8 +65,8 @@ const ImpactCalculator = () => {
       <Typography variant="h3" gutterBottom>
         SEO Revenue Impact Estimator
       </Typography>
+      <CreatedByMessage />
       <ReadMore text={introText} charLimit={325} />
-
       <Card variant="outlined" sx={{ mb: 4 }}>
         <CardContent>
           <Typography variant="h4" gutterBottom>

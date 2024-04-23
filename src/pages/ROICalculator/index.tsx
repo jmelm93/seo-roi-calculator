@@ -7,6 +7,7 @@ import ROISection from "./ROISection";
 import ROIForm from "./ROIForm";
 import ROIChart from "./ROIChart";
 import { ChartData, ChartDataItem, Inputs, ROIData } from "./types";
+import CreatedByMessage from "../../components/CreatedByMessage";
 
 const defaultInputs: Inputs = {
   startingTraffic: 10000,
@@ -85,9 +86,7 @@ const ROICalculator: React.FC = () => {
       <Typography variant="h3" marginBottom={2.5}>
         ROI Calculator
       </Typography>
-      <Typography variant="body2" marginBottom={2}>
-        Created by Jason Melman
-      </Typography>
+      <CreatedByMessage />
       <ROIForm
         inputs={inputs}
         setInputs={setInputs}
