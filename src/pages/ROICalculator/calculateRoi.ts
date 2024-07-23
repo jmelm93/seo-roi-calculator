@@ -1,21 +1,21 @@
 import { Inputs, ROIData } from "./types";
 
 const calculateROI = (inputs: Inputs): ROIData => {
-  const diffTraffic = inputs.targetTraffic - inputs.startingTraffic;
+  const diffTraffic = inputs.targetTraffic - inputs.startingTraffic; // Difference in traffic from start to target
 
   let chartData = [];
-  let trafficValueIndex =
-    inputs.conversionRate * (inputs.conversionValue / 100);
-  let currentTraffic = inputs.startingTraffic;
-  let totalAdditionalTraffic = -diffTraffic / 2;
-  let valueOfAdditionalTraffic = 0;
-  let cumulativeProfitOrLoss = 0;
+  const trafficValueIndex =
+    inputs.conversionRate * (inputs.conversionValue / 100); // Value per unit of traffic
+  let currentTraffic = inputs.startingTraffic; // Initialize current traffic to starting traffic
+  let totalAdditionalTraffic = 0; // Initialize total additional traffic
+  let cumulativeProfitOrLoss = 0; // Initialize cumulative profit or loss
 
   for (
     let currentMonth = 1;
     currentMonth <= inputs.calcTimeframe;
     currentMonth++
   ) {
+    // Calculate current traffic based on growth timeframe, hang time, and decay rate
     if (currentMonth <= inputs.growthTimeframe) {
       currentTraffic =
         inputs.startingTraffic +
@@ -26,47 +26,47 @@ const calculateROI = (inputs: Inputs): ROIData => {
       currentTraffic *= 1 - inputs.decayRate / 100;
     }
 
-    let additionalTraffic = currentTraffic - inputs.startingTraffic;
-    totalAdditionalTraffic += additionalTraffic;
+    const additionalTraffic = currentTraffic - inputs.startingTraffic; // Calculate additional traffic
+    totalAdditionalTraffic += additionalTraffic; // Accumulate additional traffic
 
     let profitLossByMonth: any = {};
     profitLossByMonth.month = currentMonth;
+    profitLossByMonth.currentTraffic = Math.round(currentTraffic); // Current traffic for the month
+    profitLossByMonth.additionalTraffic = Math.round(additionalTraffic); // Additional traffic for the month
 
+    // Determine SEO cost for the month
     if (currentMonth <= inputs.seoPeriod) {
       profitLossByMonth.seoCost = inputs.seoCost;
-      if (currentMonth > 1) {
-        valueOfAdditionalTraffic +=
-          (diffTraffic * trafficValueIndex) / (inputs.growthTimeframe - 1);
-      }
-      profitLossByMonth.valueOfAdditionalTraffic = valueOfAdditionalTraffic;
-      cumulativeProfitOrLoss -= inputs.seoCost;
     } else {
       profitLossByMonth.seoCost = 0;
-      profitLossByMonth.valueOfAdditionalTraffic =
-        additionalTraffic * trafficValueIndex;
     }
 
-    cumulativeProfitOrLoss += profitLossByMonth.valueOfAdditionalTraffic;
+    const valueOfAdditionalTraffic = additionalTraffic * trafficValueIndex; // Calculate value of additional traffic
+    cumulativeProfitOrLoss +=
+      valueOfAdditionalTraffic - profitLossByMonth.seoCost; // Update cumulative profit or loss
+
     profitLossByMonth.valueOfAdditionalTraffic = Math.round(
-      profitLossByMonth.valueOfAdditionalTraffic
-    );
+      valueOfAdditionalTraffic
+    ); // Round value of additional traffic
     profitLossByMonth.cumulativeProfitOrLoss = Math.round(
       cumulativeProfitOrLoss
-    );
+    ); // Round cumulative profit or loss
 
-    chartData.push(profitLossByMonth);
+    chartData.push(profitLossByMonth); // Add monthly profit/loss data to chart
   }
 
-  let totalInvestment = inputs.seoCost * inputs.seoPeriod;
-  let totalAdditionalTrafficValue = totalAdditionalTraffic * trafficValueIndex;
-  let roi = totalAdditionalTrafficValue / totalInvestment;
+  const totalInvestment = inputs.seoCost * inputs.seoPeriod; // Calculate total investment
+  const totalAdditionalTrafficValue =
+    totalAdditionalTraffic * trafficValueIndex; // Calculate total additional traffic value
+  const roi =
+    ((totalAdditionalTrafficValue - totalInvestment) / totalInvestment) * 100; // Calculate ROI and convert to percentage
 
   return {
-    totalAdditionalTraffic: Math.round(totalAdditionalTraffic),
-    totalInvestment: Math.round(totalInvestment),
-    totalAdditionalTrafficValue: Math.round(totalAdditionalTrafficValue),
-    roi: roi.toFixed(1),
-    chartData: chartData,
+    totalAdditionalTraffic: Math.round(totalAdditionalTraffic), // Round total additional traffic
+    totalInvestment: Math.round(totalInvestment), // Round total investment
+    totalAdditionalTrafficValue: Math.round(totalAdditionalTrafficValue), // Round total additional traffic value
+    roi: roi.toFixed(0), // Convert ROI to fixed decimal string
+    chartData: chartData, // Return chart data
   };
 };
 
